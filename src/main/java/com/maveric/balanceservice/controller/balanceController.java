@@ -21,6 +21,11 @@ public class balanceController {
         List<BalanceDto> balanceDtoResponse = balanceService.getBalances(page,pageSize);
         return new ResponseEntity<List<BalanceDto>>(balanceDtoResponse, HttpStatus.OK);
     }
+    @GetMapping("accounts/{accountId}/balance")
+    public ResponseEntity<BalanceDto> getBalance(@PathVariable String accountId) {
+        BalanceDto balanceDtoResponse = balanceService.getBalanceByAccountId(accountId);
+        return new ResponseEntity<BalanceDto>(balanceDtoResponse, HttpStatus.OK);
+    }
     @PostMapping("accounts/{accountId}/balances")
     public ResponseEntity<BalanceDto> createBalance(@PathVariable String accountId, @RequestBody BalanceDto balanceDto) {
         BalanceDto BalanceDtoResponse = balanceService.createBalance(balanceDto);

@@ -39,6 +39,16 @@ public class BalanceServiceImpl implements BalanceService{
             return new ArrayList<>();
         }
     }
+
+    @Override
+    public BalanceDto getBalanceByAccountId(String accountId) {
+        Balance balanceResult = repository.findByAccountId(accountId);
+        if(balanceResult!=null)
+            return  mapper.map(balanceResult);
+        else
+            return new BalanceDto();
+    }
+
     @Override
     public BalanceDto createBalance(BalanceDto balanceDto) {
         Balance balance = mapper.map(balanceDto);

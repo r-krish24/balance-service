@@ -7,6 +7,8 @@ import java.util.List;
 public interface BalanceService {
     public List<BalanceDto> getBalances(Integer page, Integer pageSize);
 
+    BalanceDto getBalanceByAccountId(String accountId);
+
     public BalanceDto createBalance(BalanceDto balanceDto);
 
     public BalanceDto getBalanceDetails(String balanceId);
