@@ -26,15 +26,11 @@ public class BalanceServiceImpl implements BalanceService{
     private BalanceMapper mapper;
 
     public List<BalanceDto> getBalances(Integer page, Integer pageSize) {
-        Pageable paging = (Pageable) PageRequest.of(page, pageSize);
+        Pageable paging = PageRequest.of(page, pageSize);
         Page<Balance> pageResult = repository.findAll(paging);
         if(pageResult.hasContent()) {
-            return pageResult.getContent().stream()
-                    .map(
-                            transaction -> mapper.map(transaction)
-                    ).collect(
-                            Collectors.toList()
-                    );
+            List<Balance> balances = pageResult.getContent();
+            return mapper.mapToDto(balances);
         } else {
             return new ArrayList<>();
         }
@@ -51,6 +47,7 @@ public class BalanceServiceImpl implements BalanceService{
 
     @Override
     public BalanceDto createBalance(BalanceDto balanceDto) {
+        balanceDto.setCreatedAt(getCurrentDateTime());
         Balance balance = mapper.map(balanceDto);
         Balance balanceResult = repository.save(balance);
         return  mapper.map(balanceResult);
@@ -64,7 +61,7 @@ public class BalanceServiceImpl implements BalanceService{
     @Override
     public String deleteBalance(String balanceId) {
         repository.deleteById(balanceId);
-        return "Transaction deleted successfully.";
+        return "Balance deleted successfully.";
     }
     @Override
     public BalanceDto updateBalance(String balanceId, BalanceDto balanceDto) {
