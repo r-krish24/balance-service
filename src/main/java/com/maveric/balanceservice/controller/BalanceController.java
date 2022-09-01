@@ -29,7 +29,7 @@ public class BalanceController {
     @PostMapping("accounts/{accountId}/balances")
     public ResponseEntity<BalanceDto> createBalance(@PathVariable String accountId, @RequestBody BalanceDto balanceDto) {
         BalanceDto BalanceDtoResponse = balanceService.createBalance(balanceDto);
-        return new ResponseEntity<BalanceDto>(BalanceDtoResponse, HttpStatus.OK);
+        return new ResponseEntity<BalanceDto>(BalanceDtoResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("accounts/{accountId}/balances/{balanceId}")
