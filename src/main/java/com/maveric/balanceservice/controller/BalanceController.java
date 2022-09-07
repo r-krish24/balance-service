@@ -15,31 +15,31 @@ public class BalanceController {
     BalanceService balanceService;
 
 
+//    @GetMapping("accounts/{accountId}/balances")
+//    public ResponseEntity<List<BalanceDto>> getBalances(@PathVariable String accountId, @RequestParam(defaultValue = "0") Integer page,
+//                                                                @RequestParam(defaultValue = "10") Integer pageSize) {
+//        List<BalanceDto> balanceDtoResponse = balanceService.getBalances(accountId,page,pageSize);
+//        return new ResponseEntity<List<BalanceDto>>(balanceDtoResponse, HttpStatus.OK);
+//    }
     @GetMapping("accounts/{accountId}/balances")
-    public ResponseEntity<List<BalanceDto>> getBalances(@PathVariable String accountId, @RequestParam(defaultValue = "0") Integer page,
-                                                                @RequestParam(defaultValue = "10") Integer pageSize) {
-        List<BalanceDto> balanceDtoResponse = balanceService.getBalances(page,pageSize);
-        return new ResponseEntity<List<BalanceDto>>(balanceDtoResponse, HttpStatus.OK);
-    }
-    @GetMapping("accounts/{accountId}/balance")
-    public ResponseEntity<BalanceDto> getBalance(@PathVariable String accountId) {
+    public ResponseEntity<BalanceDto> getBalances(@PathVariable String accountId) {
         BalanceDto balanceDtoResponse = balanceService.getBalanceByAccountId(accountId);
         return new ResponseEntity<BalanceDto>(balanceDtoResponse, HttpStatus.OK);
     }
     @PostMapping("accounts/{accountId}/balances")
     public ResponseEntity<BalanceDto> createBalance(@PathVariable String accountId, @RequestBody BalanceDto balanceDto) {
-        BalanceDto BalanceDtoResponse = balanceService.createBalance(balanceDto);
+        BalanceDto BalanceDtoResponse = balanceService.createBalance(accountId,balanceDto);
         return new ResponseEntity<BalanceDto>(BalanceDtoResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("accounts/{accountId}/balances/{balanceId}")
     public ResponseEntity<String> getBalanceDetails(@PathVariable String accountId,@PathVariable String balanceId) {
-        BalanceDto BalanceDtoResponse = balanceService.getBalanceDetails(balanceId);
+        BalanceDto BalanceDtoResponse = balanceService.getBalanceDetails(accountId,balanceId);
         return new ResponseEntity<String>(String.valueOf(BalanceDtoResponse.getAmount()), HttpStatus.OK);
     }
     @PutMapping("accounts/{accountId}/balances/{balanceId}")
     public ResponseEntity<BalanceDto> updateBalance(@PathVariable String accountId,@PathVariable String balanceId,@RequestBody BalanceDto balanceDto) {
-        BalanceDto balanceDtoResponse = balanceService.updateBalance(balanceId,balanceDto);
+        BalanceDto balanceDtoResponse = balanceService.updateBalance(accountId,balanceId,balanceDto);
         return new ResponseEntity<BalanceDto>(balanceDtoResponse, HttpStatus.OK);
     }
     @DeleteMapping("accounts/{accountId}/balances/{balancesId}")

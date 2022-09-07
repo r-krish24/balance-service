@@ -2,6 +2,7 @@ package com.maveric.balanceservice.exception;
 
 import com.maveric.balanceservice.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,7 +25,14 @@ public class ExceptionControllerAdvisor {
         errorDto.setMessage(exception.getMessage());
         return errorDto;
     }
-
+    @ExceptionHandler(InvalidException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public final ErrorDto invalidException(InvalidException exception) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(BAD_REQUEST_CODE);
+        errorDto.setMessage(exception.getMessage());
+        return errorDto;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -50,6 +58,19 @@ public class ExceptionControllerAdvisor {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(METHOD_NOT_ALLOWED_CODE);
         errorDto.setMessage(METHOD_NOT_ALLOWED_MESSAGE);
+        return errorDto;
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDto handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(BAD_REQUEST_CODE);
+        System.out.println(ex.getMessage());
+        if(ex.getMessage().contains("com.maveric.balanceservice.enumeration.Currency"))
+            errorDto.setMessage(INVALID_INPUT_TYPE);
+        else
+            errorDto.setMessage(HttpMessageNotReadableException_MESSAGE);
         return errorDto;
     }
 

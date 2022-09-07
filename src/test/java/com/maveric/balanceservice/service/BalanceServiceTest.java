@@ -54,7 +54,7 @@ public class BalanceServiceTest {
         when(mapper.map(any(BalanceDto.class))).thenReturn(getBalance());
         when(mapper.map(any(Balance.class))).thenReturn(getBalanceDto());
         when(repository.save(any())).thenReturn(getBalance());
-        BalanceDto balanceDto = service.createBalance(getBalanceDto());
+        BalanceDto balanceDto = service.createBalance(getBalance().getAccountId(),getBalanceDto());
         assertSame(balanceDto.getAccountId(), getBalance().getAccountId());
     }
 
@@ -66,7 +66,7 @@ public class BalanceServiceTest {
         when(pageResult.getContent()).thenReturn(Arrays.asList(getBalance(),getBalance()));
         when(mapper.mapToDto(any())).thenReturn(Arrays.asList(getBalanceDto(),getBalanceDto()));
 
-        List<BalanceDto> balances = service.getBalances(1,1);
+        List<BalanceDto> balances = service.getBalances(getBalance().getAccountId(),1,1);
 
         assertEquals("123", balances.get(0).getAccountId());
         assertEquals(Currency.INR, balances.get(1).getCurrency());
@@ -77,7 +77,7 @@ public class BalanceServiceTest {
         when(repository.findById("2")).thenReturn(Optional.of(getBalance()));
         when(mapper.map(any(Balance.class))).thenReturn(getBalanceDto());
 
-        BalanceDto balanceDto = service.getBalanceDetails("2");
+        BalanceDto balanceDto = service.getBalanceDetails(getBalance().getAccountId(),"2");
 
         assertSame(balanceDto.getAccountId(),getBalanceDto().getAccountId());
     }
@@ -87,9 +87,7 @@ public class BalanceServiceTest {
 
         when(repository.findById("2")).thenReturn(Optional.of(getBalance()));
         willDoNothing().given(repository).deleteById("2");
-
         String balanceDto = service.deleteBalance("2");
-
         assertSame( "Balance deleted successfully.",balanceDto);
     }
 
