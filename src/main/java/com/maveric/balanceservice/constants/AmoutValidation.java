@@ -1,8 +1,6 @@
 package com.maveric.balanceservice.constants;
 
 
-import com.maveric.balanceservice.enumeration.Currency;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
@@ -10,9 +8,9 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { CurrencyValidatorImplementation.class })
-public @interface CurrencyValidation {
-    String message() default "Currency should be INR/DOLLAR/EURO";
+@Constraint(validatedBy = { AmountValidatorImplementation.class })
+public @interface AmoutValidation {
+    String message() default "Amount is not valid";
 
     Class<?>[] groups() default {};
 

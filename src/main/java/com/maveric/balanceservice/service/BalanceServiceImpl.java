@@ -48,10 +48,17 @@ public class BalanceServiceImpl implements BalanceService {
 
     public BalanceDto createBalance(String accountId, BalanceDto balanceDto) {
         if (accountId.equals(balanceDto.getAccountId())) {
-            balanceDto.setCreatedAt(getCurrentDateTime());
-            Balance balance = mapper.map(balanceDto);
-            Balance balanceResult = repository.save(balance);
-            return mapper.map(balanceResult);
+            if(repository.findByAccountId(accountId)==null) {
+
+
+                balanceDto.setCreatedAt(getCurrentDateTime());
+                Balance balance = mapper.map(balanceDto);
+                Balance balanceResult = repository.save(balance);
+                return mapper.map(balanceResult);
+            }
+            else {
+                throw new BalanceNotFoundException("Account Id already Exist! Cannot create account.");
+            }
         } else {
             throw new BalanceNotFoundException("Account Id not found! Cannot create account.");
         }
