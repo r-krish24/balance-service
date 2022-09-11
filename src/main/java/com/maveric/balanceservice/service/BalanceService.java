@@ -13,6 +13,7 @@ public interface BalanceService {
 
     public BalanceDto getBalanceDetails(String accountId,String balanceId);
     public String deleteBalance(String balanceId);
+    public String deleteBalancebyaccountId(String accountId);
 
     public BalanceDto updateBalance(String accountId,String balanceId,BalanceDto balanceDto);
 }

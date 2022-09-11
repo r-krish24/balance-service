@@ -52,4 +52,10 @@ public class BalanceController {
         String result = balanceService.deleteBalance(balancesId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("accounts/{accountId}/balances")
+    public ResponseEntity<String> deleteBalance(@PathVariable String accountId) {
+        String result = balanceService.deleteBalancebyaccountId(accountId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

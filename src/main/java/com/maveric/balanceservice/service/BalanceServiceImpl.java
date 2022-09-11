@@ -79,6 +79,11 @@ public class BalanceServiceImpl implements BalanceService {
         repository.deleteById(balanceId);
         return BALANCE_DELETED_SUCCESS;
     }
+    @Override
+    public String deleteBalancebyaccountId(String accountId) {
+        repository.deleteByAccountId(accountId);
+        return BALANCE_DELETED_SUCCESS;
+    }
 
     @Override
     public BalanceDto updateBalance(String accountId, String balanceId, BalanceDto balanceDto) {
