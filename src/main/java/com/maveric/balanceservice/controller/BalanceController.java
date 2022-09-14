@@ -22,7 +22,7 @@ public class BalanceController {
 //        return new ResponseEntity<List<BalanceDto>>(balanceDtoResponse, HttpStatus.OK);
 //    }
 
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("accounts/{accountId}/balances")
     public ResponseEntity<BalanceDto> getBalances(@PathVariable String accountId) {
         BalanceDto balanceDtoResponse = balanceService.getBalanceByAccountId(accountId);
@@ -33,25 +33,25 @@ public class BalanceController {
         BalanceDto BalanceDtoResponse = balanceService.createBalance(accountId,balanceDto);
         return new ResponseEntity<BalanceDto>(BalanceDtoResponse, HttpStatus.CREATED);
     }
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("accounts/{accountId}/balances/{balanceId}")
     public ResponseEntity<String> getBalanceDetails(@PathVariable String accountId,@PathVariable String balanceId) {
         BalanceDto BalanceDtoResponse = balanceService.getBalanceDetails(accountId,balanceId);
         return new ResponseEntity<String>(String.valueOf(BalanceDtoResponse.getAmount()), HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @PutMapping("accounts/{accountId}/balances/{balanceId}")
     public ResponseEntity<BalanceDto> updateBalance(@PathVariable String accountId,@PathVariable String balanceId,@Valid @RequestBody BalanceDto balanceDto) {
         BalanceDto balanceDtoResponse = balanceService.updateBalance(accountId,balanceId,balanceDto);
         return new ResponseEntity<BalanceDto>(balanceDtoResponse, HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("accounts/{accountId}/balances/{balancesId}")
     public ResponseEntity<String> deleteBalance(@PathVariable String accountId,@PathVariable String balancesId) {
         String result = balanceService.deleteBalance(balancesId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("accounts/{accountId}/balances")
     public ResponseEntity<String> deleteBalance(@PathVariable String accountId) {
         String result = balanceService.deleteBalancebyaccountId(accountId);
