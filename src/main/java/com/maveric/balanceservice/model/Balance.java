@@ -17,7 +17,7 @@ public class Balance {
     @Id
     private String _id;
     private String accountId;
-    private String amount;
+    private Number amount;
     private Currency currency;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

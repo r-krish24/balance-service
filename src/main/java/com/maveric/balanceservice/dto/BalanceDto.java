@@ -3,6 +3,7 @@ package com.maveric.balanceservice.dto;
 import com.maveric.balanceservice.enumeration.Currency;
 import lombok.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -11,17 +12,16 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
-
 public class BalanceDto {
     private String  _id;
-
+    @Valid
     @NotBlank(message = "Account Id is mandatory")
     private String accountId;
-
-    @NotBlank(message = "Amount is mandatory")
-    @Pattern(regexp = "^[+]?(\\d+\\.?\\d*|\\.\\d+)$",message = "Invalid amount given")
-    private String amount;
-
+    @Valid
+    @NotNull(message = "Amount is mandatory")
+    @Min(value = 0,message = "Amount shouldn't be lesser than zero")
+    private Number amount;
+    @Valid
     @NotNull(message = "Currency is mandatory INR/DOLLAR/EURO ")
     private Currency currency;
     private LocalDateTime createdAt;

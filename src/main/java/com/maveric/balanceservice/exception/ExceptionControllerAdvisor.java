@@ -19,7 +19,7 @@ import static com.maveric.balanceservice.constants.Constants.*;
 public class ExceptionControllerAdvisor {
     @ExceptionHandler(BalanceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public final ErrorDto handleUserNotFoundException(BalanceNotFoundException exception) {
+    public static final ErrorDto handleBalanceNotFoundException(BalanceNotFoundException exception) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BALANCE_NOT_FOUND_CODE);
         errorDto.setMessage(exception.getMessage());
@@ -27,7 +27,7 @@ public class ExceptionControllerAdvisor {
     }
     @ExceptionHandler(InvalidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public final ErrorDto invalidException(InvalidException exception) {
+    public static final ErrorDto invalidException(InvalidException exception) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BAD_REQUEST_CODE);
         errorDto.setMessage(exception.getMessage());
@@ -38,6 +38,7 @@ public class ExceptionControllerAdvisor {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleValidationExceptions(
             MethodArgumentNotValidException ex) {
+        System.out.println("------------exception-------------------");
         ErrorDto errorDto = new ErrorDto();
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -45,6 +46,7 @@ public class ExceptionControllerAdvisor {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+
         errorDto.setCode(BAD_REQUEST_CODE);
         errorDto.setMessage(BAD_REQUEST_MESSAGE);
         errorDto.setErrors(errors);

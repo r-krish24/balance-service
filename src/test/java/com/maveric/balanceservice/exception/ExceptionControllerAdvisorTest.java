@@ -1,6 +1,7 @@
 package com.maveric.balanceservice.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maveric.balanceservice.dto.ErrorDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.maveric.balanceservice.BalanceServiceApplicationTests.APIV1;
 import static com.maveric.balanceservice.BalanceServiceApplicationTests.getBalanceDto;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,7 +32,18 @@ public class ExceptionControllerAdvisorTest {
 
     @Autowired
     ObjectMapper objectMapper;
+    @Test
+    public void handleBalanceNotFoundException() {
+        BalanceNotFoundException exception = new BalanceNotFoundException("User Not found");
+        ErrorDto error = ExceptionControllerAdvisor.handleBalanceNotFoundException(exception);
+        assertEquals("404",error.getCode());
+    }
 
+    public void invalidexceptiontest() {
+        InvalidException exception = new InvalidException("Invalid Exception");
+        ErrorDto error = ExceptionControllerAdvisor.invalidException(exception);
+        assertEquals("400",error.getCode());
+    }
     @Test
     public void whenRequestSyntaxNotValidShouldGetError400WhenRequestMadeToCreateBalanceDetails() throws Exception
     {
@@ -38,7 +51,7 @@ public class ExceptionControllerAdvisorTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(getBalanceDto()))
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
 
