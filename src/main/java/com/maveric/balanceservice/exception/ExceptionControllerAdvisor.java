@@ -72,7 +72,7 @@ public class ExceptionControllerAdvisor {
         if(ex.getMessage().contains("com.maveric.balanceservice.enumeration.Currency"))
             errorDto.setMessage(INVALID_INPUT_TYPE);
         else
-            errorDto.setMessage(HttpMessageNotReadableException_MESSAGE);
+            errorDto.setMessage(HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE);
         return errorDto;
     }
 

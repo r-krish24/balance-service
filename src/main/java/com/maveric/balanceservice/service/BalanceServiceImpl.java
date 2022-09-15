@@ -6,15 +6,8 @@ import com.maveric.balanceservice.mapper.BalanceMapper;
 import com.maveric.balanceservice.model.Balance;
 import com.maveric.balanceservice.repository.BalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.maveric.balanceservice.constants.Constants.*;
 
 @Service
@@ -25,16 +18,6 @@ public class BalanceServiceImpl implements BalanceService {
     @Autowired
     private BalanceMapper mapper;
 
-//    public List<BalanceDto> getBalances(String accountId, Integer page, Integer pageSize) {
-//        Pageable paging = PageRequest.of(page, pageSize);
-//        Page<Balance> pageResult = repository.findByAccountId(paging, accountId);
-//        if (pageResult.hasContent()) {
-//            List<Balance> balances = pageResult.getContent();
-//            return mapper.mapToDto(balances);
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
 
     @Override
     public BalanceDto getBalanceByAccountId(String accountId) {
@@ -57,10 +40,10 @@ public class BalanceServiceImpl implements BalanceService {
                 return mapper.map(balanceResult);
             }
             else {
-                throw new BalanceNotFoundException("Account Id already Exist! Cannot create account.");
+                throw new BalanceNotFoundException("Balance already exists for this Account Id-"+balanceDto.getAccountId());
             }
         } else {
-            throw new BalanceNotFoundException("Account Id not found! Cannot create account.");
+            throw new BalanceNotFoundException("Account Id not found! Cannot create balance.");
         }
     }
 
@@ -80,7 +63,7 @@ public class BalanceServiceImpl implements BalanceService {
         return BALANCE_DELETED_SUCCESS;
     }
     @Override
-    public String deleteBalancebyaccountId(String accountId) {
+    public String deleteBalanceByAccountId(String accountId) {
         repository.deleteByAccountId(accountId);
         return BALANCE_DELETED_SUCCESS;
     }
@@ -98,7 +81,7 @@ public class BalanceServiceImpl implements BalanceService {
             Balance accountUpdated = repository.save(balanceResult);
             return mapper.map(accountUpdated);
         } else {
-            throw new BalanceNotFoundException("Account Id not found! Cannot Update account.");
+            throw new BalanceNotFoundException("Account Id not found! Cannot Update Balance.");
         }
     }
 }
