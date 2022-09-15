@@ -38,7 +38,6 @@ public class ExceptionControllerAdvisor {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-        System.out.println("------------exception-------------------");
         ErrorDto errorDto = new ErrorDto();
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -68,8 +67,7 @@ public class ExceptionControllerAdvisor {
             HttpMessageNotReadableException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BAD_REQUEST_CODE);
-        System.out.println(ex.getMessage());
-        if(ex.getMessage().contains("com.maveric.balanceservice.enumeration.Currency"))
+        if(ex.getMessage().contains("com.maveric.balanceservice.enumeration.Currency"))//NOSONAR
             errorDto.setMessage(INVALID_INPUT_TYPE);
         else
             errorDto.setMessage(HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE);

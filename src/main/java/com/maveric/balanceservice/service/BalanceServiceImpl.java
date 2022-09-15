@@ -24,7 +24,7 @@ public class BalanceServiceImpl implements BalanceService {
 
         Balance balanceResult = repository.findByAccountId(accountId);
         if (balanceResult != null)
-            return mapper.map((Balance) balanceResult);
+            return mapper.map(balanceResult);
         else
             return new BalanceDto();
     }
