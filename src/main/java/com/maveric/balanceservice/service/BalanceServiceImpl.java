@@ -6,66 +6,82 @@ import com.maveric.balanceservice.mapper.BalanceMapper;
 import com.maveric.balanceservice.model.Balance;
 import com.maveric.balanceservice.repository.BalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.maveric.balanceservice.constants.Constants.getCurrentDateTime;
+import static com.maveric.balanceservice.constants.Constants.*;
 
 @Service
-public class BalanceServiceImpl implements BalanceService{
+public class BalanceServiceImpl implements BalanceService {
     @Autowired
     private BalanceRepository repository;
 
     @Autowired
     private BalanceMapper mapper;
 
-    public List<BalanceDto> getBalances(Integer page, Integer pageSize) {
-        Pageable paging = (Pageable) PageRequest.of(page, pageSize);
-        Page<Balance> pageResult = repository.findAll(paging);
-        if(pageResult.hasContent()) {
-            return pageResult.getContent().stream()
-                    .map(
-                            transaction -> mapper.map(transaction)
-                    ).collect(
-                            Collectors.toList()
-                    );
+
+    @Override
+    public BalanceDto getBalanceByAccountId(String accountId) {
+
+        Balance balanceResult = repository.findByAccountId(accountId);
+        if (balanceResult != null)
+            return mapper.map(balanceResult);
+        else
+            return new BalanceDto();
+    }
+
+    public BalanceDto createBalance(String accountId, BalanceDto balanceDto) {
+        if (accountId.equals(balanceDto.getAccountId())) {
+            if(repository.findByAccountId(accountId)==null) {
+
+
+                balanceDto.setCreatedAt(getCurrentDateTime());
+                Balance balance = mapper.map(balanceDto);
+                Balance balanceResult = repository.save(balance);
+                return mapper.map(balanceResult);
+            }
+            else {
+                throw new BalanceNotFoundException("Balance already exists for this Account Id-"+balanceDto.getAccountId());
+            }
         } else {
-            return new ArrayList<>();
+            throw new BalanceNotFoundException("Account Id not found! Cannot create balance.");
         }
     }
+
     @Override
-    public BalanceDto createBalance(BalanceDto balanceDto) {
-        Balance balance = mapper.map(balanceDto);
-        Balance balanceResult = repository.save(balance);
-        return  mapper.map(balanceResult);
-    }
-    
-    @Override
-    public BalanceDto getBalanceDetails(String balanceId) {
-        Balance balanceResult=repository.findById(balanceId).orElseThrow(() -> new BalanceNotFoundException("Balance not found"));
+    public BalanceDto getBalanceDetails(String accountId,String balanceId) {
+        Balance balanceResult = repository.findById(balanceId).orElseThrow(() -> new BalanceNotFoundException("Balance not found"));
         return mapper.map(balanceResult);
     }
+
     @Override
     public String deleteBalance(String balanceId) {
+        if(!repository.findById(balanceId).isPresent())
+        {
+            throw new BalanceNotFoundException(BALANCE_NOT_FOUND_MESSAGE+balanceId);
+        }
         repository.deleteById(balanceId);
-        return "Transaction deleted successfully.";
+        return BALANCE_DELETED_SUCCESS;
     }
     @Override
-    public BalanceDto updateBalance(String balanceId, BalanceDto balanceDto) {
-        Balance balanceResult=repository.findById(balanceId).orElseThrow(() -> new BalanceNotFoundException("Balance not found"));
-        balanceResult.set_id(balanceResult.get_id());
-        balanceResult.setAmount(balanceDto.getAmount());
-        balanceResult.setCurrency(balanceDto.getCurrency());
-        balanceResult.setAccountId(balanceResult.getAccountId());
-        balanceResult.setCreatedAt(balanceResult.getCreatedAt());
-        balanceResult.setUpdatedAt(getCurrentDateTime());
-        Balance accountUpdated = repository.save(balanceResult);
-        return mapper.map(accountUpdated);
+    public String deleteBalanceByAccountId(String accountId) {
+        repository.deleteByAccountId(accountId);
+        return BALANCE_DELETED_SUCCESS;
+    }
+
+    @Override
+    public BalanceDto updateBalance(String accountId, String balanceId, BalanceDto balanceDto) {
+        if (accountId.equals(balanceDto.getAccountId())) {
+            Balance balanceResult = repository.findById(balanceId).orElseThrow(() -> new BalanceNotFoundException("Balance not found"));
+            balanceResult.set_id(balanceResult.get_id());
+            balanceResult.setAmount(balanceDto.getAmount());
+            balanceResult.setCurrency(balanceDto.getCurrency());
+            balanceResult.setAccountId(balanceResult.getAccountId());
+            balanceResult.setCreatedAt(balanceResult.getCreatedAt());
+            balanceResult.setUpdatedAt(getCurrentDateTime());
+            Balance accountUpdated = repository.save(balanceResult);
+            return mapper.map(accountUpdated);
+        } else {
+            throw new BalanceNotFoundException("Account Id not found! Cannot Update Balance.");
+        }
     }
 }
