@@ -22,7 +22,7 @@ class BalanceServiceApplicationTests {
 	public static BalanceDto getBalanceDto()
 	{
 		return  BalanceDto.builder()
-				._id("2")
+				._id("1")
 				.accountId("123")
 				.amount(2000)
 				.currency(Currency.INR)
